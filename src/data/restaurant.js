@@ -54,5 +54,4 @@ export const restaurant = {
   ],
   timeSlots: ["12:00", "12:30", "13:00", "13:30", "14:00", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30"],
   capacidadPorSlot: 4, // máximo de reservas confirmadas por horario
-  adminPassword: "kansas2024",
 };

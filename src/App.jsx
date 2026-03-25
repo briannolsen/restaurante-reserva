@@ -4,13 +4,33 @@ import Navbar from "./components/Navbar/Navbar";
 import Hero from "./components/Hero/Hero";
 import Menu from "./components/Menu/Menu";
 import Gallery from "./components/Gallery/Gallery";
-import PreOrder from "./components/PickupOrder/PreOrder";
 import ReservationForm from "./components/ReservationForm/ReservationForm";
 import B2BSection from "./components/B2B/B2BSection";
 import AdminPanel from "./components/Admin/AdminPanel";
 import PagoExitoso from "./components/PagoResultado/PagoExitoso";
 import PagoFallido from "./components/PagoResultado/PagoFallido";
 import { restaurant } from "./data/restaurant";
+
+function FloatingCart({ cart }) {
+  const totalItems = Object.values(cart).reduce((sum, { qty }) => sum + qty, 0);
+  const totalPrice = Object.values(cart).reduce((sum, { qty, price }) => sum + qty * price, 0);
+  if (totalItems === 0) return null;
+  return (
+    <button
+      onClick={() => document.getElementById("reserva")?.scrollIntoView({ behavior: "smooth" })}
+      className="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-amber-500 hover:bg-amber-600 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-xl shadow-amber-200/60 transition-all duration-300 group"
+    >
+      <span className="text-xl">🛒</span>
+      <div className="text-left">
+        <p className="text-xs opacity-80 leading-none mb-0.5">
+          {totalItems} {totalItems === 1 ? "plato" : "platos"}
+        </p>
+        <p className="font-bold leading-none">${totalPrice.toLocaleString("es-AR")}</p>
+      </div>
+      <span className="ml-1 text-amber-100 group-hover:translate-x-1 transition-transform">→</span>
+    </button>
+  );
+}
 
 function Footer() {
   return (
@@ -47,11 +67,11 @@ function ClienteSite() {
       <Navbar />
       <Hero />
       <Menu cart={cart} onUpdateQty={updateQty} />
+      <ReservationForm cart={cart} onUpdateQty={updateQty} />
       <Gallery />
-      <PreOrder cart={cart} onUpdateQty={updateQty} />
-      <ReservationForm cart={cart} />
-      <B2BSection />
       <Footer />
+      <B2BSection />
+      <FloatingCart cart={cart} />
     </div>
   );
 }

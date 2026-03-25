@@ -7,6 +7,7 @@ import {
   query,
   where,
   orderBy,
+  limit,
   serverTimestamp,
   onSnapshot,
 } from "firebase/firestore";
@@ -15,18 +16,26 @@ import { restaurant } from "../data/restaurant";
 
 const COL = "reservas";
 
-// Crear nueva reserva (estado: pendiente)
+// Genera un código corto legible de 6 caracteres (sin I, O, 0, 1 para evitar confusión)
+function generarCodigo() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  return Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+}
+
+// Crear nueva reserva → devuelve { id, codigoReserva }
 export async function crearReserva(data) {
+  const codigoReserva = generarCodigo();
   const docRef = await addDoc(collection(db, COL), {
     ...data,
-    estado: "pendiente",
+    codigoReserva,
+    estado: data.estado || "pendiente",
     restaurante: restaurant.name,
     creadoEn: serverTimestamp(),
   });
-  return docRef.id;
+  return { id: docRef.id, codigoReserva };
 }
 
-// Actualizar estado: "confirmada" | "rechazada"
+// Actualizar estado: "confirmada" | "rechazada" | "pagado"
 export async function actualizarEstado(id, estado) {
   await updateDoc(doc(db, COL, id), { estado, actualizadoEn: serverTimestamp() });
 }
@@ -41,6 +50,26 @@ export async function contarSlot(fecha, hora) {
   );
   const snap = await getDocs(q);
   return snap.size;
+}
+
+// Buscar reserva por código corto (para "ya tengo reserva")
+export async function obtenerReservaPorCodigo(codigo) {
+  const q = query(
+    collection(db, COL),
+    where("codigoReserva", "==", codigo.toUpperCase()),
+    limit(1)
+  );
+  const snap = await getDocs(q);
+  if (snap.empty) return null;
+  const d = snap.docs[0];
+  return { id: d.id, ...d.data() };
+}
+
+// Escuchar una reserva específica (para esperar confirmación de pago)
+export function escucharReserva(id, callback) {
+  return onSnapshot(doc(db, COL, id), (snap) => {
+    if (snap.exists()) callback({ id: snap.id, ...snap.data() });
+  });
 }
 
 // Escuchar reservas en tiempo real (para el admin)

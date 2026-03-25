@@ -23,7 +23,7 @@ export default function PagoFallido() {
         </p>
 
         <Link
-          to="/#pedido"
+          to="/#reserva"
           className="block bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 rounded-2xl transition-colors mb-3"
         >
           Intentar de nuevo

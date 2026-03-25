@@ -32,14 +32,14 @@ export default function PagoExitoso() {
           ¡Pago exitoso!
         </h1>
         <p className="text-stone-500 text-sm mb-6">
-          Tu pre-pedido está confirmado. La cocina ya lo recibió y va a estar listo cuando llegues.
+          Tu pedido está confirmado. El restaurante ya lo recibió.
         </p>
 
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6 text-left">
-          <p className="text-amber-800 font-semibold text-sm mb-1">👨‍🍳 ¿Qué sigue?</p>
-          <p className="text-amber-700 text-xs">
-            Llegá al restaurante a la hora que indicaste. Tus platos van a estar en preparación.
-          </p>
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6 text-left space-y-2">
+          <p className="text-amber-800 font-semibold text-sm">👨‍🍳 Pre-pedido</p>
+          <p className="text-amber-700 text-xs">Llegá a la hora que indicaste — tus platos van a estar en preparación.</p>
+          <p className="text-amber-800 font-semibold text-sm mt-2">🥡 Take away</p>
+          <p className="text-amber-700 text-xs">Te avisamos por WhatsApp cuando esté listo para retirar.</p>
         </div>
 
         <Link

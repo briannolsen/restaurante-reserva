@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { restaurant } from "../../data/restaurant";
 
-export default function Navbar({ activeSection }) {
+export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -14,7 +14,7 @@ export default function Navbar({ activeSection }) {
 
   const links = [
     { label: "Menú", href: "#menu" },
-    { label: "Pedir", href: "#pedido" },
+    { label: "Reservas & Pedidos", href: "#reserva" },
   ];
 
   return (

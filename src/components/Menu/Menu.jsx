@@ -102,7 +102,7 @@ export default function Menu({ cart, onUpdateQty }) {
                       {qty === 0 ? (
                         <button
                           onClick={() => onUpdateQty(item.name, item.price, 1)}
-                          className="w-8 h-8 rounded-full bg-amber-500 hover:bg-amber-600 text-white font-bold text-lg flex items-center justify-center transition-colors shadow-md shadow-amber-200"
+                          className="w-8 h-8 rounded-full bg-amber-500 hover:bg-amber-600 text-white font-bold text-lg leading-none flex items-center justify-center transition-colors shadow-md shadow-amber-200"
                         >
                           +
                         </button>
@@ -141,14 +141,9 @@ export default function Menu({ cart, onUpdateQty }) {
                 <p className="font-semibold">{totalItems} plato{totalItems > 1 ? "s" : ""} seleccionado{totalItems > 1 ? "s" : ""}</p>
                 <p className="text-stone-400 text-sm">Total estimado: <span className="text-amber-400 font-bold">${totalPrice.toLocaleString("es-AR")}</span></p>
               </div>
-              <div className="flex gap-3 w-full sm:w-auto">
-                <a href="#pedido" className="flex-1 sm:flex-none text-center bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold px-5 py-3 rounded-full transition-colors whitespace-nowrap">
-                  Pre-pedido →
-                </a>
-                <a href="#reserva" className="flex-1 sm:flex-none text-center border border-white/30 hover:bg-white/10 text-white text-sm font-semibold px-5 py-3 rounded-full transition-colors whitespace-nowrap">
-                  Reservar mesa →
-                </a>
-              </div>
+              <a href="#reserva" className="w-full sm:w-auto text-center bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold px-6 py-3 rounded-full transition-colors whitespace-nowrap">
+                Reservar / Pedir →
+              </a>
             </motion.div>
           )}
         </AnimatePresence>

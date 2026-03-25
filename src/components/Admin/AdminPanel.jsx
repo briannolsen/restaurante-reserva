@@ -50,7 +50,7 @@ export default function AdminPanel() {
   }, [autenticado]);
 
   const handleLogin = () => {
-    if (password === restaurant.adminPassword) {
+    if (password === import.meta.env.VITE_ADMIN_PASSWORD) {
       setAutenticado(true);
     } else {
       setErrorAuth(true);
@@ -72,6 +72,8 @@ export default function AdminPanel() {
     pendiente: reservas.filter((r) => r.estado === "pendiente").length,
     confirmada: reservas.filter((r) => r.estado === "confirmada").length,
     rechazada: reservas.filter((r) => r.estado === "rechazada").length,
+    pagado: reservas.filter((r) => r.estado === "pagado").length,
+    esperando_pago: reservas.filter((r) => r.estado === "esperando_pago").length,
   };
 
   // Login screen
@@ -132,22 +134,24 @@ export default function AdminPanel() {
 
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-3 md:grid-cols-5 gap-3 mb-8">
           {[
             { label: "Pendientes", count: counts.pendiente, color: "amber" },
             { label: "Confirmadas", count: counts.confirmada, color: "green" },
             { label: "Rechazadas", count: counts.rechazada, color: "red" },
+            { label: "Pagados", count: counts.pagado, color: "blue" },
+            { label: "Esp. pago", count: counts.esperando_pago, color: "stone" },
           ].map(({ label, count, color }) => (
-            <div key={label} className="bg-white rounded-2xl p-5 text-center shadow-sm">
+            <div key={label} className="bg-white rounded-2xl p-4 text-center shadow-sm">
               <p className={`text-3xl font-bold text-${color}-500 mb-1`}>{count}</p>
-              <p className="text-stone-500 text-sm">{label}</p>
+              <p className="text-stone-500 text-xs">{label}</p>
             </div>
           ))}
         </div>
 
         {/* Filtros */}
         <div className="flex flex-wrap gap-3 items-center mb-6">
-          {["pendiente", "confirmada", "rechazada", "todas"].map((e) => (
+          {["pendiente", "confirmada", "rechazada", "pagado", "esperando_pago", "todas"].map((e) => (
             <button
               key={e}
               onClick={() => setFiltro(e)}
@@ -156,7 +160,9 @@ export default function AdminPanel() {
               }`}
             >
               {e === "todas" ? "Todas" : ESTADO_LABEL[e]}
-              {e !== "todas" && <span className="ml-1.5 text-xs opacity-70">({counts[e]})</span>}
+              {e !== "todas" && counts[e] !== undefined && (
+                <span className="ml-1.5 text-xs opacity-70">({counts[e]})</span>
+              )}
             </button>
           ))}
           <input

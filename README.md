@@ -1,16 +1,82 @@
-# React + Vite
+# ChichoReserva
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Plataforma SaaS para reservas de mesas en restaurantes, con pre-pedidos y cobro integrado a traves de Mercado Pago.
 
-Currently, two official plugins are available:
+## Stack tecnologico
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Frontend:** React 19, Vite, Tailwind CSS, Framer Motion
+- **Backend:** Node.js, Express
+- **Base de datos:** Firebase Firestore
+- **Pagos:** Mercado Pago (Checkout Pro)
+- **Notificaciones:** WhatsApp (mensajes automaticos)
 
-## React Compiler
+## Funcionalidades
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Reservas online con seleccion de fecha, hora y cantidad de comensales
+- Menu digital con pre-pedido antes de llegar al restaurante
+- Cobro anticipado mediante Mercado Pago
+- Panel de administracion para gestionar reservas y pedidos
+- Notificaciones por WhatsApp (confirmacion, rechazo, recordatorios)
+- Actualizaciones en tiempo real via Firestore
 
-## Expanding the ESLint configuration
+## Arquitectura
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+El proyecto se compone de dos partes:
+
+- **Frontend (React + Vite):** aplicacion SPA que consume Firebase Firestore directamente para lectura y escritura de reservas. Se encuentra en la raiz del repositorio.
+- **Backend (Node.js + Express):** servidor que gestiona la integracion con Mercado Pago (creacion de preferencias de pago y webhooks). Se encuentra en la carpeta `backend/`.
+
+## Ejecucion local
+
+### Frontend
+
+```bash
+npm install
+npm run dev
+```
+
+El servidor de desarrollo se inicia en `http://localhost:5173`.
+
+### Backend
+
+```bash
+cd backend
+npm install
+node server.js
+```
+
+## Variables de entorno
+
+Copiar los archivos de ejemplo y completar con las credenciales correspondientes:
+
+```bash
+cp .env.example .env
+cp backend/.env.example backend/.env
+```
+
+### Frontend (.env)
+
+| Variable | Descripcion |
+|---|---|
+| `VITE_FIREBASE_API_KEY` | API key de Firebase |
+| `VITE_FIREBASE_AUTH_DOMAIN` | Dominio de autenticacion de Firebase |
+| `VITE_FIREBASE_PROJECT_ID` | ID del proyecto en Firebase |
+| `VITE_FIREBASE_STORAGE_BUCKET` | Bucket de almacenamiento de Firebase |
+| `VITE_FIREBASE_MESSAGING_SENDER_ID` | Sender ID de Firebase Cloud Messaging |
+| `VITE_FIREBASE_APP_ID` | App ID de Firebase |
+
+### Backend (backend/.env)
+
+| Variable | Descripcion |
+|---|---|
+| `MP_ACCESS_TOKEN` | Access token de Mercado Pago |
+| `FRONTEND_URL` | URL del frontend (por defecto `http://localhost:5173`) |
+
+## Scripts disponibles
+
+| Comando | Descripcion |
+|---|---|
+| `npm run dev` | Inicia el servidor de desarrollo |
+| `npm run build` | Genera el build de produccion |
+| `npm run lint` | Ejecuta ESLint |
+| `npm run preview` | Previsualiza el build de produccion |
