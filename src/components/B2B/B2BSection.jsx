@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-const CHICHO_WA = "5491130466533";
+const RESTAURANTE_WA = "5491130466533";
 
 
 const beneficios = [
@@ -24,7 +24,7 @@ const cardVariants = {
 
 export default function B2BSection() {
   const msg = encodeURIComponent(
-    `Hola! Me interesa sumar mi restaurante a ChichoReserva. ¿Me podés contar más?`
+    `Hola! Me interesa sumar mi restaurante a RestauranteReserva. ¿Me podés contar más?`
   );
 
   return (
@@ -44,7 +44,7 @@ export default function B2BSection() {
             ¿Tenés un restaurante?
           </h2>
           <p className="text-stone-400 max-w-xl mx-auto text-sm">
-            Sumá tu restaurante a ChichoReserva — reservas online, pedidos anticipados y cero comisión.
+            Sumá tu restaurante a RestauranteReserva — reservas online, pedidos anticipados y cero comisión.
           </p>
         </motion.div>
 
@@ -73,7 +73,7 @@ export default function B2BSection() {
           className="text-center"
         >
           <a
-            href={`https://wa.me/${CHICHO_WA}?text=${msg}`}
+            href={`https://wa.me/${RESTAURANTE_WA}?text=${msg}`}
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white font-semibold px-7 py-3.5 rounded-full transition-all hover:scale-105 active:scale-95"

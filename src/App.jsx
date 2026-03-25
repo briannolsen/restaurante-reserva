@@ -41,7 +41,7 @@ function Footer() {
       <p className="text-sm mb-1">{restaurant.address}</p>
       <p className="text-sm mb-4">{restaurant.hours}</p>
       <a href="#restaurantes" className="text-amber-400 hover:underline text-xs">¿Tenés un restaurante? Sumalo →</a>
-      <p className="text-xs text-stone-600 mt-4">© {new Date().getFullYear()} {restaurant.name} · Powered by ChichoReserva</p>
+      <p className="text-xs text-stone-600 mt-4">© {new Date().getFullYear()} {restaurant.name} · Powered by RestauranteReserva</p>
     </footer>
   );
 }
