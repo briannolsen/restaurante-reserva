@@ -221,11 +221,13 @@ export default function ReservationForm({ cart, onUpdateQty }) {
   const [mode, setMode] = useState(null); // null | 'reservar' | 'ya-tengo'
 
   // --- Reservar mesa ---
+  const formRef = useRef(null);
   const [step, setStep] = useState(0);
   const [form, setForm] = useState({
     fecha: "",
     hora: "",
     personas: "2",
+    ubicacion: "",
     nombre: "",
     telefono: "",
     notas: "",
@@ -276,8 +278,14 @@ export default function ReservationForm({ cart, onUpdateQty }) {
     });
   }, [form.fecha, form.hora]);
 
+  useEffect(() => {
+    if (step > 0 && formRef.current) {
+      formRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [step]);
+
   const isStep0Valid =
-    form.fecha && form.hora && form.personas && (!tipoPedido || items.length > 0);
+    form.fecha && form.hora && form.personas && form.ubicacion && (!tipoPedido || items.length > 0);
   const isStep1Valid =
     form.nombre &&
     form.telefono &&
@@ -415,7 +423,7 @@ export default function ReservationForm({ cart, onUpdateQty }) {
   const resetReservar = () => {
     if (unsubPagoRef.current) { unsubPagoRef.current(); unsubPagoRef.current = null; }
     setStep(0);
-    setForm({ fecha: "", hora: "", personas: "2", nombre: "", telefono: "", notas: "" });
+    setForm({ fecha: "", hora: "", personas: "2", ubicacion: "", nombre: "", telefono: "", notas: "" });
     setTipoPedido(null);
     setSent(false);
     setEsperandoPago(false);
@@ -595,7 +603,7 @@ export default function ReservationForm({ cart, onUpdateQty }) {
                       ))}
                     </div>
 
-                    <div className="bg-stone-50 rounded-3xl p-8">
+                    <div ref={formRef} className="bg-stone-50 rounded-3xl p-8">
                       <AnimatePresence mode="wait">
                         {/* Step 0: Cuándo + tipo */}
                         {step === 0 && (
@@ -675,21 +683,51 @@ export default function ReservationForm({ cart, onUpdateQty }) {
 
                             {/* Personas */}
                             <div>
-                              <label className="block text-sm font-semibold text-stone-700 mb-2">
-                                Personas:{" "}
-                                <span className="text-amber-500 text-lg">{form.personas}</span>
+                              <label className="block text-sm font-semibold text-stone-700 mb-3">
+                                Personas
                               </label>
-                              <input
-                                type="range"
-                                min="1"
-                                max="12"
-                                value={form.personas}
-                                onChange={(e) => update("personas", e.target.value)}
-                                className="w-full accent-amber-500"
-                              />
-                              <div className="flex justify-between text-xs text-stone-400 mt-1">
-                                <span>1</span>
-                                <span>12</span>
+                              <div className="grid grid-cols-6 gap-2">
+                                {[1, 2, 3, 4, 5, 6].map((n) => (
+                                  <button
+                                    key={n}
+                                    type="button"
+                                    onClick={() => update("personas", String(n))}
+                                    className={`py-3 rounded-xl border-2 font-bold text-sm transition-all ${
+                                      form.personas === String(n)
+                                        ? "border-amber-500 bg-amber-500 text-white"
+                                        : "border-stone-200 bg-white text-stone-700 hover:border-amber-300"
+                                    }`}
+                                  >
+                                    {n}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Ubicación */}
+                            <div>
+                              <label className="block text-sm font-semibold text-stone-700 mb-3">
+                                Ubicación
+                              </label>
+                              <div className="grid grid-cols-2 gap-3">
+                                {[
+                                  { id: "salon", icon: "🏠", label: "Salón" },
+                                  { id: "patio", icon: "🌿", label: "Patio" },
+                                ].map(({ id, icon, label }) => (
+                                  <button
+                                    key={id}
+                                    type="button"
+                                    onClick={() => update("ubicacion", id)}
+                                    className={`p-4 rounded-2xl border-2 text-left transition-all ${
+                                      form.ubicacion === id
+                                        ? "border-amber-500 bg-amber-50"
+                                        : "border-stone-200 bg-white hover:border-amber-300"
+                                    }`}
+                                  >
+                                    <span className="text-2xl mb-1 block">{icon}</span>
+                                    <p className="font-bold text-stone-900 text-sm">{label}</p>
+                                  </button>
+                                ))}
                               </div>
                             </div>
 
@@ -725,9 +763,18 @@ export default function ReservationForm({ cart, onUpdateQty }) {
                                   animate={{ opacity: 1, height: "auto" }}
                                   className="mt-4 space-y-2"
                                 >
-                                  <p className="text-xs font-semibold text-stone-500 uppercase tracking-wider">
-                                    Tu pedido
-                                  </p>
+                                  <div className="flex items-center justify-between">
+                                    <p className="text-xs font-semibold text-stone-500 uppercase tracking-wider">
+                                      Tu pedido
+                                    </p>
+                                    <button
+                                      type="button"
+                                      onClick={() => setTipoPedido(null)}
+                                      className="text-xs text-stone-400 hover:text-red-500 font-semibold transition-colors"
+                                    >
+                                      Cancelar selección ✕
+                                    </button>
+                                  </div>
                                   <CartPreview
                                     items={items}
                                     total={total}
@@ -832,6 +879,11 @@ export default function ReservationForm({ cart, onUpdateQty }) {
                                   icon: "👥",
                                   label: "Personas",
                                   value: `${form.personas} persona${form.personas > 1 ? "s" : ""}`,
+                                },
+                                {
+                                  icon: form.ubicacion === "salon" ? "🏠" : "🌿",
+                                  label: "Ubicación",
+                                  value: form.ubicacion === "salon" ? "Salón" : "Patio",
                                 },
                                 { icon: "👤", label: "Nombre", value: form.nombre },
                                 { icon: "📞", label: "Teléfono", value: form.telefono },
